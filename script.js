@@ -249,6 +249,7 @@ function checkAvailability() {
 const message = encodeURIComponent(
 `🕹 FORM PEMESANAN
 ─────────────────────────────
+\`\`\`
 Nama       : ${nameVal}
 Konsol     : ${consoleVal}
 Room       : ${roomVal}
@@ -256,7 +257,7 @@ Tanggal    : ${dateVal}
 Jam Mulai  : ${startVal}
 Durasi     : ${durationVal} jam
 Total      : Rp${hargaFormat}
-─────────────────────────────
+\`\`\`
 Silakan konfirmasi agar reservasi diproses ✅`
 );
 
@@ -296,3 +297,4 @@ document.addEventListener("click", (e) => {
     document.body.style.overflow = "auto";
   }
 });
+
