@@ -256,7 +256,9 @@ Room       : ${roomVal}
 Tanggal    : ${dateVal}
 Jam Mulai  : ${startVal}
 Durasi     : ${durationVal} jam
-Total      : Rp${hargaFormat}
+─────────────────────────────
+TOTAL HARGA: Rp${hargaFormat}
+─────────────────────────────
 \`\`\`
 Silakan konfirmasi agar reservasi diproses ✅`
 );
@@ -297,4 +299,5 @@ document.addEventListener("click", (e) => {
     document.body.style.overflow = "auto";
   }
 });
+
 
