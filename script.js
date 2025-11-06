@@ -453,7 +453,8 @@ ${padRight("Room", labelLength)}: ${roomVal}
 ${padRight("Tanggal", labelLength)}: ${dateVal}
 ${padRight("Jam Mulai", labelLength)}: ${startVal}
 ${padRight("Durasi", labelLength)}: ${durationVal} jam
-${padRight("Total", labelLength)}: Rp${hargaFormat}
+─────────────────
+${padRight("TOTAL HARGA", labelLength)}: Rp${hargaFormat}
 ─────────────────
 Silakan konfirmasi agar reservasi diproses
 \`\`\``;
@@ -511,6 +512,7 @@ document.addEventListener("click", (e) => {
     document.body.style.overflow = "auto";
   }
 });
+
 
 
 
