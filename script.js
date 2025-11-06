@@ -246,22 +246,22 @@ function checkAvailability() {
       const hargaFormat = totalHarga.toLocaleString("id-ID");
 
       // 💬 Format pesan WA elegan & senada
-      const message = encodeURIComponent(
-`🕹️ *FORM PEMESANAN*
-━━━━━━━━━━━━━━━
-👤 Nama: ${nameVal}
-🎮 Konsol: ${consoleVal}
-🏠 Room: ${roomVal}
-📅 Tanggal: ${dateVal}
-⏰ Jam Mulai: ${startVal}
-⏱️ Durasi: ${durationVal} jam
-💰 Total: Rp${hargaFormat}
-━━━━━━━━━━━━━━━
-Silakan *konfirmasi* agar reservasi diproses ✅`
-      );
+const message = encodeURIComponent(
+`🕹 FORM PEMESANAN
+─────────────────────────────
+Nama       : ${nameVal}
+Konsol     : ${consoleVal}
+Room       : ${roomVal}
+Tanggal    : ${dateVal}
+Jam Mulai  : ${startVal}
+Durasi     : ${durationVal} jam
+Total      : Rp${hargaFormat}
+─────────────────────────────
+Silakan konfirmasi agar reservasi diproses ✅`
+);
 
-      const waLink = `https://wa.me/${waNumber}?text=${message}`;
-      submitBtn.setAttribute("data-wa", waLink);
+const waLink = `https://wa.me/${waNumber}?text=${message}`;
+submitBtn.setAttribute("data-wa", waLink);
 
       // 🪩 Popup konfirmasi dengan animasi lembut
       showDecisionPopup(
