@@ -161,11 +161,13 @@ invoicePopup.innerHTML = `
     <div class="invoice-row"><div class="label">Konsol</div><div class="colon">:</div><div class="value" id="invConsole"></div></div>
     <div class="invoice-row"><div class="label">Room</div><div class="colon">:</div><div class="value" id="invRoom"></div></div>
     <div class="invoice-line"></div>
-    <div class="invoice-row"><div class="label">Harga / Jam</div><div class="colon">:</div><div class="value" id="invRate"></div></div>
+    <div class="invoice-row"><div class="label">Harga Satuan</div><div class="colon">:</div><div class="value" id="invRate"></div></div>
     <div class="invoice-row"><div class="label">Durasi</div><div class="colon">:</div><div class="value" id="invDuration"></div></div>
+    
     <div class="invoice-line"></div>
     <div class="invoice-total" id="invHarga"></div>
     <div class="invoice-line"></div>
+    
     <div class="invoice-warning" id="vipWarning"></div>
     <div class="invoice-line"></div>
     <div class="invoice-print-date" id="invPrintDate"></div>
