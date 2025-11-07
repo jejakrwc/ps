@@ -1,5 +1,5 @@
 // ======================================================
-// SCRIPT.JS — GAME STATION BOOKING SYSTEM FINAL (AUTO UPDATE DATA)
+// SCRIPT.JS — GAME STATION BOOKING SYSTEM (AUTO UPDATE SYNC FIX)
 // ======================================================
 
 // ======================================================
@@ -38,23 +38,25 @@ const nameInput = document.getElementById("name");
 const statusDiv = document.getElementById("availability");
 
 // ======================================================
-// 🔁 AUTO LOAD DATA BOOKING TERBARU
+// 🔁 AUTO LOAD DATA BOOKING TERBARU (dari data-booking.js)
 // ======================================================
 async function loadLatestData() {
   try {
-    const response = await fetch("data-booking.js?v=" + Date.now()); // hindari cache
-    const text = await response.text();
+    const res = await fetch("data-booking.js?v=" + Date.now(), { cache: "no-store" });
+    const text = await res.text();
 
-    // Ambil isi variabel bookedData dari file
-    const match = text.match(/bookedData\s*=\s*(\[([\s\S]*?)\]);/);
-    if (match) {
-      const jsonText = match[1];
-      const tempFunc = new Function("return " + jsonText);
-      window.bookedData = tempFunc();
-      console.log("✅ Data booking diperbarui otomatis:", bookedData);
-    } else {
-      console.warn("⚠️ Tidak menemukan variabel bookedData di data-booking.js");
-    }
+    // Ambil isi bookedData, roomsByConsole, priceList, dan waNumber dari file
+    const bookedMatch = text.match(/bookedData\s*=\s*(\[[\s\S]*?\]);/);
+    const roomsMatch = text.match(/roomsByConsole\s*=\s*(\{[\s\S]*?\});/);
+    const priceMatch = text.match(/priceList\s*=\s*(\{[\s\S]*?\});/);
+    const waMatch = text.match(/waNumber\s*=\s*["'`](\d+)["'`]/);
+
+    if (bookedMatch) window.bookedData = new Function("return " + bookedMatch[1])();
+    if (roomsMatch) window.roomsByConsole = new Function("return " + roomsMatch[1])();
+    if (priceMatch) window.priceList = new Function("return " + priceMatch[1])();
+    if (waMatch) window.waNumber = waMatch[1];
+
+    console.log("✅ Data booking disinkron otomatis:", bookedData.length, "entri");
   } catch (err) {
     console.error("❌ Gagal memuat data-booking.js:", err);
   }
@@ -69,18 +71,16 @@ consoleSelect.addEventListener("change", async function () {
   const consoleType = this.value;
   roomSelect.innerHTML = '<option value="">Pilih Room</option>';
 
-  if (consoleType && roomsByConsole[consoleType]) {
+  if (consoleType && roomsByConsole?.[consoleType]) {
     roomsByConsole[consoleType].forEach((category) => {
       const optGroup = document.createElement("optgroup");
       optGroup.label = category.group;
-
       category.list.forEach((room) => {
         const option = document.createElement("option");
         option.value = room;
         option.textContent = room;
         optGroup.appendChild(option);
       });
-
       roomSelect.appendChild(optGroup);
     });
   }
@@ -112,7 +112,7 @@ function toMinutes(time) {
 }
 
 // ======================================================
-// 6️⃣ POPUP KONFIRMASI DINAMIS
+// 6️⃣ POPUP KONFIRMASI
 // ======================================================
 function showDecisionPopup(title, message, yesText, noText, yesAction, noAction) {
   const existing = document.getElementById("decisionPopup");
@@ -163,17 +163,13 @@ invoicePopup.innerHTML = `
     <div class="invoice-line"></div>
     <div class="invoice-row"><div class="label">Harga / Jam</div><div class="colon">:</div><div class="value" id="invRate"></div></div>
     <div class="invoice-row"><div class="label">Durasi</div><div class="colon">:</div><div class="value" id="invDuration"></div></div>
-    
     <div class="invoice-line"></div>
     <div class="invoice-total" id="invHarga"></div>
     <div class="invoice-line"></div>
-    
     <div class="invoice-warning" id="vipWarning"></div>
-
     <div class="invoice-line"></div>
     <div class="invoice-print-date" id="invPrintDate"></div>
     <div class="invoice-line"></div>
-
     <div class="invoice-buttons">
       <button id="confirmWA">KIRIM</button>
       <button id="editData">UBAH</button>
@@ -236,12 +232,12 @@ async function checkAvailability() {
   statusDiv.style.display = "block";
   statusDiv.innerHTML = `<span class="spinner"></span>Memeriksa ketersediaan...`;
 
-  // 🔁 Ambil data terbaru sebelum periksa
-  await loadLatestData();
+  await loadLatestData(); // 🔁 ambil data terbaru sebelum cek
 
   setTimeout(() => {
     const startTime = toMinutes(startVal);
     const endTime = startTime + durationVal * 60;
+
     const isOverlap = bookedData.some((b) => {
       if (b.date !== dateVal || b.room !== roomVal) return false;
       const bStart = toMinutes(b.start);
@@ -299,7 +295,7 @@ TOTAL HARGA : Rp${hargaFormat}
         }
       );
     }
-  }, 500);
+  }, 400);
 }
 
 // ======================================================
@@ -317,3 +313,11 @@ document.addEventListener("click", (e) => {
     document.body.style.overflow = "auto";
   }
 });
+
+// ======================================================
+// 🚀 INIT LOAD
+// ======================================================
+(async () => {
+  await loadLatestData();
+  console.log("🚀 Sistem booking siap & sinkron otomatis!");
+})();
