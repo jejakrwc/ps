@@ -45,12 +45,15 @@ async function loadLatestData() {
     const response = await fetch("data-booking.js?v=" + Date.now()); // hindari cache
     const text = await response.text();
 
+    // Ambil isi variabel bookedData dari file
     const match = text.match(/bookedData\s*=\s*(\[([\s\S]*?)\]);/);
     if (match) {
       const jsonText = match[1];
       const tempFunc = new Function("return " + jsonText);
       window.bookedData = tempFunc();
       console.log("✅ Data booking diperbarui otomatis:", bookedData);
+    } else {
+      console.warn("⚠️ Tidak menemukan variabel bookedData di data-booking.js");
     }
   } catch (err) {
     console.error("❌ Gagal memuat data-booking.js:", err);
@@ -60,7 +63,9 @@ async function loadLatestData() {
 // ======================================================
 // 4️⃣ PILIHAN ROOM DINAMIS BERDASARKAN KONSOL
 // ======================================================
-consoleSelect.addEventListener("change", function () {
+consoleSelect.addEventListener("change", async function () {
+  await loadLatestData(); // pastikan data terbaru
+
   const consoleType = this.value;
   roomSelect.innerHTML = '<option value="">Pilih Room</option>';
 
