@@ -24,7 +24,7 @@ const bookedData = [
   { nama: "KOSONG", date: "2025-11-01", start: "13:43", duration: 2, konsol: "PS4", room: "Reguler 5", order_via: "Datang Langsung", operator: "RIZKI" },
   { nama: "KOSONG", date: "2025-11-01", start: "10:35", duration: 1, konsol: "PS4", room: "Reguler 6", order_via: "Datang Langsung", operator: "RIZKI" },
   { nama: "KOSONG", date: "2025-11-01", start: "00:00", duration: 0, konsol: "PS4", room: "Reguler 7", order_via: "Datang Langsung", operator: "RIZKI" },
-  { nama: "KOSONG", date: "2025-11-01", start: "11:30", duration: 1, konsol: "PS4", room: "Reguler 8", order_via: "Datang Langsung", operator: "RIZKI" },
+  { nama: "KOSONG", date: "2025-11-07", start: "09:30", duration: 2, konsol: "PS4", room: "Reguler 8", order_via: "Datang Langsung", operator: "RIZKI" },
   { nama: "KOSONG", date: "2025-11-01", start: "00:00", duration: 0, konsol: "PS5", room: "Smoking 9", order_via: "Datang Langsung", operator: "RIZKI" },
   { nama: "SMA", date: "2025-11-01", start: "11:30", duration: 1, konsol: "PS4", room: "Smoking 10", order_via: "Datang Langsung", operator: "RIZKI" },
   { nama: "UPI", date: "2025-11-01", start: "11:30", duration: 1, konsol: "PS4", room: "Smoking 11", order_via: "Datang Langsung", operator: "RIZKI" },
@@ -101,3 +101,4 @@ const roomsByConsole = {
 if (typeof window !== "undefined") {
   window.bookedData = bookedData;
 }
+
