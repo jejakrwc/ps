@@ -1,5 +1,5 @@
 // ======================================================
-// SCRIPT.JS — GAME STATION BOOKING SYSTEM FINAL
+// SCRIPT.JS — GAME STATION BOOKING SYSTEM FINAL (AUTO UPDATE DATA)
 // ======================================================
 
 // ======================================================
@@ -36,6 +36,26 @@ const startInput = document.getElementById("start");
 const durationInput = document.getElementById("duration");
 const nameInput = document.getElementById("name");
 const statusDiv = document.getElementById("availability");
+
+// ======================================================
+// 🔁 AUTO LOAD DATA BOOKING TERBARU
+// ======================================================
+async function loadLatestData() {
+  try {
+    const response = await fetch("data-booking.js?v=" + Date.now()); // hindari cache
+    const text = await response.text();
+
+    const match = text.match(/bookedData\s*=\s*(\[([\s\S]*?)\]);/);
+    if (match) {
+      const jsonText = match[1];
+      const tempFunc = new Function("return " + jsonText);
+      window.bookedData = tempFunc();
+      console.log("✅ Data booking diperbarui otomatis:", bookedData);
+    }
+  } catch (err) {
+    console.error("❌ Gagal memuat data-booking.js:", err);
+  }
+}
 
 // ======================================================
 // 4️⃣ PILIHAN ROOM DINAMIS BERDASARKAN KONSOL
@@ -194,7 +214,7 @@ function showInvoicePopup() {
 // ======================================================
 // 9️⃣ CEK KETERSEDIAAN ROOM + POPUP KONFIRMASI
 // ======================================================
-function checkAvailability() {
+async function checkAvailability() {
   const nameVal = nameInput.value.trim();
   const dateVal = dateInput.value;
   const startVal = normalizeTime(startInput.value);
@@ -211,6 +231,9 @@ function checkAvailability() {
   statusDiv.style.display = "block";
   statusDiv.innerHTML = `<span class="spinner"></span>Memeriksa ketersediaan...`;
 
+  // 🔁 Ambil data terbaru sebelum periksa
+  await loadLatestData();
+
   setTimeout(() => {
     const startTime = toMinutes(startVal);
     const endTime = startTime + durationVal * 60;
@@ -221,7 +244,6 @@ function checkAvailability() {
       return startTime < bEnd && endTime > bStart;
     });
 
-    // 🚫 Jika bentrok jadwal
     if (isOverlap) {
       statusDiv.textContent = "❌ MAAF, room sudah dibooking di jam tersebut.";
       showDecisionPopup(
@@ -238,15 +260,12 @@ function checkAvailability() {
           document.body.style.overflow = "auto";
         }
       );
-    } 
-    // ✅ Jika tersedia
-    else {
+    } else {
       const rate = priceList[getRoomType(roomVal)]?.[consoleVal] || 0;
       const totalHarga = rate * durationVal;
       const hargaFormat = totalHarga.toLocaleString("id-ID");
 
-      // 💬 Format pesan WA elegan & senada
-const message = encodeURIComponent(
+      const message = encodeURIComponent(
 `FORM PEMESANAN
 ─────────────────────────────
 Nama       : ${nameVal}
@@ -260,11 +279,9 @@ TOTAL HARGA : Rp${hargaFormat}
 ─────────────────────────────
 -TERIMAKASIH-`
 );
+      const waLink = `https://wa.me/${waNumber}?text=${message}`;
+      submitBtn.setAttribute("data-wa", waLink);
 
-const waLink = `https://wa.me/${waNumber}?text=${message}`;
-submitBtn.setAttribute("data-wa", waLink);
-
-      // 🪩 Popup konfirmasi dengan animasi lembut
       showDecisionPopup(
         "Ruangan Tersedia 🎉",
         "✅ Ruangan tersedia untuk dipesan.<br><br>Lanjutkan ke konfirmasi?",
@@ -277,10 +294,8 @@ submitBtn.setAttribute("data-wa", waLink);
         }
       );
     }
-  }, 600);
+  }, 500);
 }
-
-
 
 // ======================================================
 // 🔟 KONFIRMASI ATAU EDIT STRUK / WHATSAPP
@@ -297,4 +312,3 @@ document.addEventListener("click", (e) => {
     document.body.style.overflow = "auto";
   }
 });
-
