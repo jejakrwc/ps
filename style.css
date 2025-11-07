@@ -337,10 +337,25 @@ body {
 /* Header */
 .invoice-box h3 {
   text-align: center;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   font-size: 1.45rem;
   font-weight: 700;
-  color: #111;
+  color: #111111;
+}
+
+.invoice-warning {
+  color: #e70909;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.invoice-print-date {
+  color: #000000;
+  font-family: 'Courier New', Courier, monospace;
+  font: size 12px; ;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .invoice-box p {
@@ -353,13 +368,13 @@ body {
 /* Garis pemisah */
 .invoice-line {
   border-top: 1px dashed #a8a8a8;
-  margin: 10px 0 14px;
+  margin: 10px 0 5px;
 }
 
 /* Detail baris */
 .invoice-row {
   display: grid;
-  grid-template-columns: 130px 10px auto;
+  grid-template-columns: 130px 11px auto;
   margin: 6px 0;
   align-items: center;
 }
@@ -382,7 +397,7 @@ body {
   text-align: right;
   font-size: 1.15rem;
   font-weight: 700;
-  color: #000;
+  color: #e70909;
   margin-top: 12px;
 }
 
@@ -390,13 +405,13 @@ body {
 .invoice-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 24px;
+  margin-top: 20px;
   gap: 12px;
 }
 
 .invoice-buttons button {
   flex: 1;
-  padding: 12px 0;
+  padding: 10px 0;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -407,7 +422,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 5px;
 }
 
 /* Tombol WhatsApp */
