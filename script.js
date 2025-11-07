@@ -247,7 +247,7 @@ function checkAvailability() {
 
       // 💬 Format pesan WA elegan & senada
 const message = encodeURIComponent(
-`🕹 FORM PEMESANAN
+`FORM PEMESANAN
 ─────────────────────────────
 Nama       : ${nameVal}
 Konsol     : ${consoleVal}
@@ -258,7 +258,7 @@ Durasi     : ${durationVal} jam
 ─────────────────────────────
 TOTAL HARGA : Rp${hargaFormat}
 ─────────────────────────────
-Silakan konfirmasi agar reservasi diproses ✅`
+-TERIMAKASIH-`
 );
 
 const waLink = `https://wa.me/${waNumber}?text=${message}`;
@@ -297,3 +297,4 @@ document.addEventListener("click", (e) => {
     document.body.style.overflow = "auto";
   }
 });
+
