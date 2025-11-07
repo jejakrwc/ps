@@ -144,17 +144,20 @@ body {
 
 .modal-content {
   background: #fff;
-  padding: 26px 24px;
-  border-radius: 18px;
+  padding: 15px 25px;
+  border-radius: 8px;
   width: 100%;
   max-width: 440px;
   position: relative;
   text-align: center;
   color: #222;
   font-family: 'Poppins', sans-serif;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.25);
   animation: popIn 0.3s ease;
   overflow: hidden;
+}
+
+.form-group {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 /* Garis gradien atas seperti invoice */
@@ -188,8 +191,8 @@ body {
 .modal-content input,
 .modal-content select {
   width: 100%;
-  margin: 6px 0;
-  padding: 11px 10px;
+  margin: 5px 0;
+  padding: 11px 15px;
   border-radius: 8px;
   border: 1px solid #ddd;
   background: #fff9f9;
@@ -402,13 +405,18 @@ body {
   margin-top: 12px;
 }
 
+/* ===========================
+   TEKS TERBILANG DI INVOICE
+   =========================== */
 .invoice-terbilang {
-  color: #000000;
-  font-family: 'Courier New', Courier, monospace;
-  font: size 12px; ;
-  text-align: center;
-  text-transform: uppercase;
+  text-align: center;       /* Di tengah */
+  font-style: italic;       /* Gaya miring elegan */
+  font-size: 0.9em;         /* Sedikit lebih kecil dari teks utama */
+  color: #444;              /* Warna abu lembut */
+  margin-top: 4px;          /* Jarak atas dari total harga */
+  margin-bottom: 8px;       /* Jarak bawah sebelum garis berikutnya */
 }
+
 
 /* Tombol */
 .invoice-buttons {
