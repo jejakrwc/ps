@@ -1,5 +1,5 @@
 // ======================================================
-// SCRIPT.JS — GAME STATION BOOKING SYSTEM (AUTO UPDATE SYNC FIX)
+// SCRIPT.JS — GAME STATION BOOKING SYSTEM (AUTO UPDATE SYNC FIX + TERBILANG)
 // ======================================================
 
 // ======================================================
@@ -45,7 +45,6 @@ async function loadLatestData() {
     const res = await fetch("data-booking.js?v=" + Date.now(), { cache: "no-store" });
     const text = await res.text();
 
-    // Ambil isi bookedData, roomsByConsole, priceList, dan waNumber dari file
     const bookedMatch = text.match(/bookedData\s*=\s*(\[[\s\S]*?\]);/);
     const roomsMatch = text.match(/roomsByConsole\s*=\s*(\{[\s\S]*?\});/);
     const priceMatch = text.match(/priceList\s*=\s*(\{[\s\S]*?\});/);
@@ -63,10 +62,27 @@ async function loadLatestData() {
 }
 
 // ======================================================
+// 🔢 FUNGSI TERBILANG (RUPIAH)
+// ======================================================
+function terbilang(n) {
+  const angka = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+  n = Math.floor(n);
+  if (n < 12) return angka[n];
+  else if (n < 20) return terbilang(n - 10) + " belas";
+  else if (n < 100) return terbilang(Math.floor(n / 10)) + " puluh " + terbilang(n % 10);
+  else if (n < 200) return "seratus " + terbilang(n - 100);
+  else if (n < 1000) return terbilang(Math.floor(n / 100)) + " ratus " + terbilang(n % 100);
+  else if (n < 2000) return "seribu " + terbilang(n - 1000);
+  else if (n < 1000000) return terbilang(Math.floor(n / 1000)) + " ribu " + terbilang(n % 1000);
+  else if (n < 1000000000) return terbilang(Math.floor(n / 1000000)) + " juta " + terbilang(n % 1000000);
+  else return "";
+}
+
+// ======================================================
 // 4️⃣ PILIHAN ROOM DINAMIS BERDASARKAN KONSOL
 // ======================================================
 consoleSelect.addEventListener("change", async function () {
-  await loadLatestData(); // pastikan data terbaru
+  await loadLatestData();
 
   const consoleType = this.value;
   roomSelect.innerHTML = '<option value="">Pilih Room</option>';
@@ -152,31 +168,43 @@ invoicePopup.id = "invoicePopup";
 invoicePopup.style.display = "none";
 invoicePopup.className = "invoice-popup";
 invoicePopup.innerHTML = `
-  <div class="invoice-box">
-    <h3>KONFIRMASI PESANAN</h3>
-    <div class="invoice-line"></div>
-    <div class="invoice-row"><div class="label">Nama</div><div class="colon">:</div><div class="value" id="invName"></div></div>
-    <div class="invoice-row"><div class="label">Tanggal</div><div class="colon">:</div><div class="value" id="invDate"></div></div>
-    <div class="invoice-row"><div class="label">Jam Mulai</div><div class="colon">:</div><div class="value" id="invTime"></div></div>
-    <div class="invoice-row"><div class="label">Konsol</div><div class="colon">:</div><div class="value" id="invConsole"></div></div>
-    <div class="invoice-row"><div class="label">Room</div><div class="colon">:</div><div class="value" id="invRoom"></div></div>
-    <div class="invoice-line"></div>
-    <div class="invoice-row"><div class="label">Harga Satuan</div><div class="colon">:</div><div class="value" id="invRate"></div></div>
-    <div class="invoice-row"><div class="label">Durasi</div><div class="colon">:</div><div class="value" id="invDuration"></div></div>
-    
-    <div class="invoice-line"></div>
-    <div class="invoice-total" id="invHarga"></div>
-    <div class="invoice-line"></div>
-    
-    <div class="invoice-warning" id="vipWarning"></div>
-    <div class="invoice-line"></div>
-    <div class="invoice-print-date" id="invPrintDate"></div>
-    <div class="invoice-line"></div>
-    <div class="invoice-buttons">
-      <button id="confirmWA">KIRIM</button>
-      <button id="editData">UBAH</button>
-    </div>
-  </div>`;
+<div class="invoice-box">
+  <h3>KONFIRMASI PESANAN</h3>
+  <div class="invoice-line"></div>
+
+  <div class="invoice-row"><div class="label">Nama</div><div class="colon">:</div><div class="value" id="invName"></div></div>
+  <div class="invoice-row"><div class="label">Tanggal</div><div class="colon">:</div><div class="value" id="invDate"></div></div>
+  <div class="invoice-row"><div class="label">Jam Mulai</div><div class="colon">:</div><div class="value" id="invTime"></div></div>
+  <div class="invoice-row"><div class="label">Konsol</div><div class="colon">:</div><div class="value" id="invConsole"></div></div>
+  <div class="invoice-row"><div class="label">Room</div><div class="colon">:</div><div class="value" id="invRoom"></div></div>
+
+  <div class="invoice-line"></div>
+
+  <div class="invoice-row"><div class="label">Harga Satuan</div><div class="colon">:</div><div class="value" id="invRate"></div></div>
+  <div class="invoice-row"><div class="label">Durasi</div><div class="colon">:</div><div class="value" id="invDuration"></div></div>
+
+  <div class="invoice-line"></div>
+
+  <!-- TOTAL HARGA -->
+  <div class="invoice-total" id="invHarga"></div>
+
+  <!-- TERBILANG DI TENGAH -->
+  <div class="invoice-terbilang" id="invTerbilang"></div>
+
+  <div class="invoice-line"></div>
+
+  <div class="invoice-warning" id="vipWarning"></div>
+  <div class="invoice-line"></div>
+
+  <div class="invoice-print-date" id="invPrintDate"></div>
+  <div class="invoice-line"></div>
+
+  <div class="invoice-buttons">
+    <button id="confirmWA">KIRIM</button>
+    <button id="editData">UBAH</button>
+  </div>
+</div>
+`;
 document.body.appendChild(invoicePopup);
 
 // ======================================================
@@ -194,6 +222,8 @@ function showInvoicePopup() {
   const rate = priceList[roomType]?.[konsol] || 0;
   const totalHarga = rate * durasi;
 
+  const teksTerbilang = terbilang(totalHarga).trim() + " rupiah";
+
   document.getElementById("invName").textContent = nama;
   document.getElementById("invDate").textContent = tanggal;
   document.getElementById("invTime").textContent = waktu;
@@ -201,7 +231,8 @@ function showInvoicePopup() {
   document.getElementById("invRoom").textContent = room;
   document.getElementById("invRate").textContent = `Rp${rate.toLocaleString("id-ID")}`;
   document.getElementById("invDuration").textContent = `${durasi} Jam`;
-  document.getElementById("invHarga").textContent = `Total: Rp${totalHarga.toLocaleString("id-ID")}`;
+  document.getElementById("invHarga").textContent = `TOTAL DIBAYAR : Rp${totalHarga.toLocaleString("id-ID")}`;
+  document.getElementById("invTerbilang").textContent = `(${teksTerbilang})`;
   document.getElementById("invPrintDate").textContent = new Date().toLocaleString("id-ID");
 
   let note = "";
@@ -234,7 +265,7 @@ async function checkAvailability() {
   statusDiv.style.display = "block";
   statusDiv.innerHTML = `<span class="spinner"></span>Memeriksa ketersediaan...`;
 
-  await loadLatestData(); // 🔁 ambil data terbaru sebelum cek
+  await loadLatestData();
 
   setTimeout(() => {
     const startTime = toMinutes(startVal);
@@ -267,6 +298,7 @@ async function checkAvailability() {
       const rate = priceList[getRoomType(roomVal)]?.[consoleVal] || 0;
       const totalHarga = rate * durationVal;
       const hargaFormat = totalHarga.toLocaleString("id-ID");
+      const teksTerbilang = terbilang(totalHarga).trim() + " rupiah";
 
       const message = encodeURIComponent(
 `FORM PEMESANAN
@@ -279,9 +311,11 @@ Jam Mulai  : ${startVal}
 Durasi     : ${durationVal} jam
 ─────────────────────────────
 TOTAL HARGA : Rp${hargaFormat}
+(${teksTerbilang})
 ─────────────────────────────
 -TERIMAKASIH-`
-);
+      );
+
       const waLink = `https://wa.me/${waNumber}?text=${message}`;
       submitBtn.setAttribute("data-wa", waLink);
 
@@ -321,5 +355,5 @@ document.addEventListener("click", (e) => {
 // ======================================================
 (async () => {
   await loadLatestData();
-  console.log("🚀 Sistem booking siap & sinkron otomatis!");
+  console.log("🚀 Sistem booking siap & sinkron otomatis (dengan terbilang)!");
 })();
