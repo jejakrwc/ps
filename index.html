@@ -6,15 +6,16 @@
        =============================================== -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Booking Room</title>
+  <title>Booking Room | Gamezone Padang</title>
 
   <!-- File CSS utama -->
   <link rel="stylesheet" href="style.css" />
 
   <!-- Font dari Google Fonts (Poppins) -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+  <!-- Icon Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
@@ -23,63 +24,73 @@
        ===================================================== -->
   <header class="hero parallax-section">
     <div class="hero-content fade-in">
-      <!-- Judul utama -->
       <h1>Selamat Datang di <span>Gamezone Padang</span></h1>
-
-      <!-- Deskripsi singkat -->
       <p>Rasakan sensasi bermain dengan kenyamanan terbaik.</p>
-
-      <!-- Tombol modal booking -->
-      <button id="pesanBtn" class="btn-primary">Pesan Sekarang</button>
+      <button id="pesanBtn" class="btn-primary"><i class="fa-solid fa-ticket"></i> Pesan Sekarang</button>
     </div>
   </header>
 
   <!-- =====================================================
        MODAL BOOKING — Form Pemesanan
        ===================================================== -->
-<!-- Modal Booking -->
-<div id="bookingModal" class="modal" style="display: none;">
-  <div class="modal-content">
-    <h3>FORM PEMESANAN</h3>
-    <p>Pilih tanggal, jam, durasi, dan jenis konsol.</p>
-
+  <div id="bookingModal" class="modal" style="display: none;">
+    <div class="modal-content glass-box fade-in">
+      <h3><i class="fa-solid fa-clipboard-list"></i> FORM PEMESANAN</h3>
       <form id="bookingForm">
-        <label><i class="fa-solid fa-user"></i> Atas Nama</label>
-        <input type="text" id="name" name="name" placeholder="Masukkan nama pemesan" required />
+        <div class="form-group">
+          <label><i class="fa-solid fa-user"></i> Atas Nama</label>
+          <input type="text" id="name" name="name" placeholder="Masukkan nama pemesan" required />
+        </div>
 
-        <label><i class="fa-solid fa-calendar-days"></i> Tanggal</label>
-        <input type="date" id="date" name="date" required />
+        <div class="form-group">
+          <label><i class="fa-solid fa-calendar-days"></i> Tanggal</label>
+          <input type="date" id="date" name="date" required />
+        </div>
 
-        <label><i class="fa-solid fa-clock"></i> Jam Mulai</label>
-        <input type="time" id="start" name="start" required />
+        <div class="form-group">
+          <label><i class="fa-solid fa-clock"></i> Jam Mulai</label>
+          <input type="time" id="start" name="start" required />
+        </div>
 
-        <label><i class="fa-solid fa-hourglass-half"></i> Durasi</label>
-        <input type="number" id="duration" name="duration" placeholder="Contoh: 2" min="1" max="8" required />
+        <div class="form-group">
+          <label><i class="fa-solid fa-hourglass-half"></i> Durasi (jam)</label>
+          <input type="number" id="duration" name="duration" placeholder="Contoh: 2" min="1" max="8" required />
+        </div>
 
-        <label><i class="fa-solid fa-gamepad"></i> Konsol</label>
-        <select id="console" name="console" required>
-          <option value="">Pilih Konsol</option>
-          <option value="PS4">PS4</option>
-          <option value="PS5">PS5</option>
-        </select>
+        <div class="form-group">
+          <label><i class="fa-solid fa-gamepad"></i> Konsol</label>
+          <select id="console" name="console" required>
+            <option value="">Pilih Konsol</option>
+            <option value="PS4">PS4</option>
+            <option value="PS5">PS5</option>
+          </select>
+        </div>
 
-        <label><i class="fa-solid fa-door-open"></i> Room</label>
-        <select id="room" name="room" required>
-          <option value="">Pilih Room</option>
-        </select>
+        <div class="form-group">
+          <label><i class="fa-solid fa-door-open"></i> Room</label>
+          <select id="room" name="room" required>
+            <option value="">Pilih Room</option>
+          </select>
+        </div>
 
         <div id="availability" class="availability"></div>
 
-        <button type="submit" id="submitBtn" disabled>KIRIM PESANAN</button>
+        <button type="submit" id="submitBtn" class="btn-submit" disabled>
+          <i class="fa-solid fa-paper-plane"></i> Kirim Pesanan
+        </button>
       </form>
     </div>
   </div>
+
   <!-- =====================================================
        SCRIPT FILES — Menghubungkan file JS ke HTML
        ===================================================== -->
-  <script src="data-booking.js?v=2"></script>
+  <script src="data-booking.js"></script>
   <script src="script.js"></script>
-  
+  <!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 </body>
 </html>
-
