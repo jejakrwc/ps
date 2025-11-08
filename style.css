@@ -404,6 +404,17 @@ body {
   text-transform: uppercase;
   margin-top: 12px;
 }
+#invDistance {
+  font-weight: 600;
+  color: #e41e26; /* warna merah mirip header */
+}
+
+#invoiceMap {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
 
 /* ===========================
    TEKS TERBILANG DI INVOICE
