@@ -412,3 +412,49 @@ function calculateDistanceInvoice() {
 
 // Panggil fungsi ini saat invoice muncul
 calculateDistanceInvoice();
+function showInvoiceMap() {
+  if (!navigator.geolocation) return;
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const userLat = pos.coords.latitude;
+      const userLng = pos.coords.longitude;
+
+      const gamezoneLat = -0.949223; // ganti dengan lokasi Gamezone asli
+      const gamezoneLng = 100.354821;
+
+      // Inisialisasi peta
+      const map = L.map('invoiceMap').setView([userLat, userLng], 13);
+
+      // Tile layer OpenStreetMap
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+      }).addTo(map);
+
+      // Marker user
+      L.marker([userLat, userLng]).addTo(map)
+        .bindPopup("Lokasi Anda")
+        .openPopup();
+
+      // Marker Gamezone
+      L.marker([gamezoneLat, gamezoneLng]).addTo(map)
+        .bindPopup("Gamezone Padang");
+
+      // Garis jarak
+      const polyline = L.polyline([[userLat, userLng], [gamezoneLat, gamezoneLng]], {color: 'red'}).addTo(map);
+
+      // Zoom otomatis agar semua marker terlihat
+      const group = new L.featureGroup([
+        L.marker([userLat, userLng]),
+        L.marker([gamezoneLat, gamezoneLng])
+      ]);
+      map.fitBounds(group.getBounds().pad(0.2));
+    },
+    (err) => {
+      console.log("Tidak bisa mendapatkan lokasi", err);
+    }
+  );
+}
+
+// Panggil saat invoice muncul
+showInvoiceMap();
