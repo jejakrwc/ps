@@ -177,6 +177,7 @@ invoicePopup.innerHTML = `
   <div class="invoice-row"><div class="label">Jam Mulai</div><div class="colon">:</div><div class="value" id="invTime"></div></div>
   <div class="invoice-row"><div class="label">Konsol</div><div class="colon">:</div><div class="value" id="invConsole"></div></div>
   <div class="invoice-row"><div class="label">Room</div><div class="colon">:</div><div class="value" id="invRoom"></div></div>
+  <div class="invoice-row"><div class="label">Jarak anda</div><div class="colon">:</div><div class="value" id="invDistance"></div></div>
 
   <div class="invoice-line"></div>
 
@@ -195,14 +196,23 @@ invoicePopup.innerHTML = `
 
   <div class="invoice-warning" id="vipWarning"></div>
   <div class="invoice-line"></div>
-
   <div class="invoice-print-date" id="invPrintDate"></div>
-  <div class="invoice-line"></div>
 
-  <div class="invoice-buttons">
-    <button id="confirmWA">KIRIM</button>
-    <button id="editData">UBAH</button>
+  <div class="invoice-row">
+  <div class="label">Peta Lokasi</div>
+  <div class="colon">:</div>
+  <div class="value">
+    <div id="invoiceMap" style="height: 200px; width: 100%; border-radius: 10px; border: 1px solid #ccc;"></div>
   </div>
+</div>
+
+<div class="invoice-line"></div>
+
+<div class="invoice-buttons">
+  <button id="confirmWA">KIRIM</button>
+  <button id="editData">UBAH</button>
+</div>
+
 </div>
 `;
 document.body.appendChild(invoicePopup);
@@ -357,3 +367,48 @@ document.addEventListener("click", (e) => {
   await loadLatestData();
   console.log("🚀 Sistem booking siap & sinkron otomatis (dengan terbilang)!");
 })();
+// Koordinat Gamezone Padang
+const gamezoneLat = -0.949223; // ganti sesuai lokasi asli
+const gamezoneLng = 100.354821;
+
+// Fungsi konversi derajat ke radian
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}
+
+// Fungsi Haversine (jarak garis lurus)
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius bumi km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // km
+}
+
+// Hitung jarak dan tampilkan
+function calculateDistanceInvoice() {
+  const distanceEl = document.getElementById("invDistance");
+  if (!navigator.geolocation) {
+    distanceEl.textContent = "Browser tidak mendukung Geolocation";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const userLat = position.coords.latitude;
+      const userLng = position.coords.longitude;
+      const km = getDistanceFromLatLonInKm(userLat, userLng, gamezoneLat, gamezoneLng);
+      distanceEl.textContent = km.toFixed(2) + " km";
+    },
+    (error) => {
+      distanceEl.textContent = "Tidak bisa mendapatkan lokasi";
+    }
+  );
+}
+
+// Panggil fungsi ini saat invoice muncul
+calculateDistanceInvoice();
