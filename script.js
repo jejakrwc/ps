@@ -150,7 +150,7 @@ document.body.appendChild(invoicePopup);
 // 🔟 VARIABEL GLOBAL PROMO
 let finalTotal = 0; 
 let appliedPromo = ""; // promo yang akan dikirim di WA
-const promos = {"GAME10":0.10,"VIP50":0.50,"WEEKEND10":0.10,"HAPPYHOUR20":0.20};
+const promos = {"GAME10":0.10,"VIP50":0.50,"MERDEKA17":0.17,"WEEKEND10":0.10,"HAPPYHOUR20":0.20};
 const promoInput = document.getElementById("promoCode");
 const promoMessage = document.getElementById("promoMessage");
 const totalEl = document.getElementById("invHarga");
