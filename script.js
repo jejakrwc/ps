@@ -1,5 +1,6 @@
 // ======================================================
-// SCRIPT.JS — GAME STATION BOOKING SYSTEM (AUTO UPDATE SYNC + TERBILANG + PROMO AUTO + JARAK AUTO)
+// SCRIPT.JS — GAME STATION BOOKING SYSTEM
+// (AUTO UPDATE + TERBILANG + PROMO AUTO + PROMO DINAMIS + JARAK AUTO)
 // ======================================================
 
 // 1️⃣ SCROLL HALUS KE FORM PEMESANAN
@@ -31,7 +32,7 @@ const durationInput = document.getElementById("duration");
 const nameInput = document.getElementById("name");
 const statusDiv = document.getElementById("availability");
 
-// 🔁 AUTO LOAD DATA BOOKING TERBARU
+// 4️⃣ AUTO LOAD DATA BOOKING TERBARU
 async function loadLatestData() {
   try {
     const res = await fetch("data-booking.js?v=" + Date.now(), { cache: "no-store" });
@@ -53,7 +54,7 @@ async function loadLatestData() {
   }
 }
 
-// 🔢 TERBILANG
+// 5️⃣ TERBILANG
 function terbilang(n) {
   const angka = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
   n = Math.floor(n);
@@ -68,11 +69,12 @@ function terbilang(n) {
   else return "";
 }
 
-// 4️⃣ PILIHAN ROOM DINAMIS
+// 6️⃣ PILIHAN ROOM DINAMIS BERDASARKAN KONSOL
 consoleSelect.addEventListener("change", async function () {
   await loadLatestData();
   const consoleType = this.value;
   roomSelect.innerHTML = '<option value="">Pilih Room</option>';
+
   if (consoleType && roomsByConsole?.[consoleType]) {
     roomsByConsole[consoleType].forEach(category => {
       const optGroup = document.createElement("optgroup");
@@ -89,12 +91,7 @@ consoleSelect.addEventListener("change", async function () {
   submitBtn.disabled = true;
 });
 
-// 5️⃣ CEK KETERSEDIAAN ROOM
-[dateInput, startInput, durationInput, roomSelect, consoleSelect, nameInput].forEach(el => {
-  el.addEventListener("input", checkAvailability);
-  el.addEventListener("change", checkAvailability);
-});
-
+// 7️⃣ BANTUAN KONVERSI
 function normalizeTime(value) { if (!value) return ""; return value.split(":").slice(0, 2).join(":"); }
 function getRoomType(roomName) {
   if (roomName.includes("Reguler")) return "Reguler";
@@ -105,7 +102,7 @@ function getRoomType(roomName) {
 }
 function toMinutes(time) { const [h,m]=time.split(":").map(Number); return h*60+m; }
 
-// 6️⃣ POPUP KONFIRMASI
+// 8️⃣ POPUP KONFIRMASI
 function showDecisionPopup(title,message,yesText,noText,yesAction,noAction){
   const existing = document.getElementById("decisionPopup");
   if(existing) existing.remove();
@@ -118,7 +115,7 @@ function showDecisionPopup(title,message,yesText,noText,yesAction,noAction){
   document.getElementById("noBtn").addEventListener("click",()=>{ popup.remove(); noAction?.(); });
 }
 
-// 7️⃣ POPUP INVOICE
+// 9️⃣ POPUP INVOICE
 const bookingForm = document.getElementById("bookingForm");
 const invoicePopup = document.createElement("div");
 invoicePopup.id="invoicePopup"; invoicePopup.style.display="none"; invoicePopup.className="invoice-popup";
@@ -134,14 +131,12 @@ invoicePopup.innerHTML=`
 <div class="invoice-row"><div class="label">Jarak anda</div><div class="colon">:</div><div class="value" id="invDistance"></div></div>
 <div class="invoice-line"></div>
 <div class="invoice-row"><div class="label">Harga Satuan</div><div class="colon">:</div><div class="value" id="invRate"></div></div>
-<div class="invoice-row"><div class="label">Durasi</div><div class="colon">:</div><div class="value" id="invDuration"></div></div>
+<div class="invoice-row"><div class="label">Durasi</div><div class="colon"></div><div class="value" id="invDuration"></div></div>
 <div class="invoice-line"></div>
 <div class="invoice-total" id="invHarga" data-original="0"></div>
 <div class="invoice-terbilang" id="invTerbilang"></div>
 <div class="invoice-line"></div>
-<div class="invoice-row">
-<div class="label">Promo</div><div class="colon">:</div><div class="value"><input type="text" id="promoCode" placeholder="Masukkan kode promo"></div>
-</div>
+<div class="invoice-row"><div class="label">Promo</div><div class="colon">:</div><div class="value"><input type="text" id="promoCode" placeholder="Masukkan kode promo"></div></div>
 <div class="invoice-row"><div class="label"></div><div class="colon"></div><div class="value" id="promoMessage" style="color:#e41e26; font-size:0.85rem;"></div></div>
 <div class="invoice-line"></div>
 <div class="invoice-warning" id="vipWarning"></div>
@@ -152,36 +147,67 @@ invoicePopup.innerHTML=`
 </div>`;
 document.body.appendChild(invoicePopup);
 
-// 8️⃣ VARIABEL GLOBAL
-let finalTotal = 0; let appliedPromo = "";
-const promos = {"GAME10":0.10,"VIP50":0.50};
+// 🔟 VARIABEL GLOBAL PROMO
+let finalTotal = 0; 
+let appliedPromo = ""; // promo yang akan dikirim di WA
+const promos = {"GAME10":0.10,"VIP50":0.50,"WEEKEND10":0.10,"HAPPYHOUR20":0.20};
 const promoInput = document.getElementById("promoCode");
 const promoMessage = document.getElementById("promoMessage");
 const totalEl = document.getElementById("invHarga");
 const terbilangEl = document.getElementById("invTerbilang");
 
-// AUTO APPLY PROMO
-function applyPromoAuto(){
-  const code = promoInput.value.toUpperCase().trim();
+// ✨ Fungsi apply promo
+function applyPromoAuto(code, showMessage = true){
   const originalTotal = Number(totalEl.dataset.original) || 0;
   if(promos[code]){
     const discount = promos[code];
     finalTotal = Math.round(originalTotal*(1-discount));
     appliedPromo = code;
-    promoMessage.style.color="#28a745";
-    promoMessage.textContent=`Promo berhasil! Diskon ${(discount*100).toFixed(0)}% diterapkan.`;
+
+    if(showMessage){ // hanya untuk input manual
+      promoMessage.style.color="#28a745";
+      promoMessage.textContent=`Promo berhasil! Diskon ${(discount*100).toFixed(0)}% diterapkan.`;
+    }
   } else {
-    finalTotal = originalTotal; appliedPromo="";
-    promoMessage.style.color="#e41e26";
-    promoMessage.textContent = code ? "Kode promo tidak valid." : "";
+    finalTotal = originalTotal;
+    if(showMessage){
+      appliedPromo = "";
+      promoMessage.style.color="#e41e26";
+      promoMessage.textContent = code ? "Kode promo tidak valid." : "";
+    }
   }
   totalEl.textContent=`TOTAL DIBAYAR : Rp${finalTotal.toLocaleString("id-ID")}`;
   terbilangEl.textContent=`(${terbilang(finalTotal)} rupiah)`;
   updateWaLink();
 }
-promoInput.addEventListener("input", applyPromoAuto);
 
-// UPDATE WA LINK
+// Input promo manual → tampilkan pesan
+promoInput.addEventListener("input", () => {
+  const code = promoInput.value.toUpperCase().trim();
+  applyPromoAuto(code, true);
+});
+
+// Promo dinamis hari/jam → TIDAK tampilkan pesan
+function applyDynamicPromo(){
+  const dateVal = dateInput.value;
+  const startVal = startInput.value;
+  if(!dateVal || !startVal) return;
+
+  const day = new Date(dateVal).getDay(); // 0=Minggu, 6=Sabtu
+  const hour = Number(startVal.split(":")[0]);
+  let dynamicCode = "";
+
+  if(day===0 || day===6) dynamicCode="WEEKEND10";      // weekend 10%
+  if(hour>=18 && hour<=21) dynamicCode="HAPPYHOUR20"; // happy hour 20%
+
+  if(dynamicCode){
+    applyPromoAuto(dynamicCode, false); // jangan tampilkan pesan
+  }
+}
+[dateInput, startInput].forEach(el => el.addEventListener("change", applyDynamicPromo));
+
+
+// 1️⃣3️⃣ UPDATE WA LINK
 function updateWaLink(){
   const nameVal=nameInput.value.trim();
   const dateVal=dateInput.value;
@@ -190,6 +216,7 @@ function updateWaLink(){
   const consoleVal=consoleSelect.value;
   const durationVal=Number(durationInput.value);
   if(!nameVal||!dateVal||!startVal||!roomVal||!consoleVal||!durationVal) return;
+
   const message=encodeURIComponent(
 `FORM PEMESANAN
 ─────────────────────────────
@@ -208,12 +235,16 @@ TOTAL HARGA : Rp${finalTotal.toLocaleString("id-ID")}
   submitBtn.setAttribute("data-wa",`https://wa.me/${waNumber}?text=${message}`);
 }
 
-// 9️⃣ TAMPILKAN STRUK + SIMPAN TOTAL
+// 1️⃣4️⃣ TAMPILKAN STRUK / INVOICE
 function showInvoicePopup(){
-  const nama=nameInput.value.trim(); const tanggal=dateInput.value;
-  const waktu=startInput.value; const durasi=Number(durationInput.value);
-  const konsol=consoleSelect.value; const room=roomSelect.value;
-  const roomType=getRoomType(room); const rate=priceList[roomType]?.[konsol]||0;
+  const nama=nameInput.value.trim();
+  const tanggal=dateInput.value;
+  const waktu=startInput.value;
+  const durasi=Number(durationInput.value);
+  const konsol=consoleSelect.value;
+  const room=roomSelect.value;
+  const roomType=getRoomType(room);
+  const rate=priceList[roomType]?.[konsol]||0;
   const totalHarga=rate*durasi;
   finalTotal=totalHarga; appliedPromo="";
   document.getElementById("invHarga").dataset.original=totalHarga;
@@ -238,7 +269,7 @@ function showInvoicePopup(){
   invoicePopup.style.display="flex";
 }
 
-// 10️⃣ CEK KETERSEDIAAN + WA LINK
+// 1️⃣5️⃣ CEK KETERSEDIAAN + WA LINK
 async function checkAvailability(){
   const nameVal=nameInput.value.trim();
   const dateVal=dateInput.value; const startVal=normalizeTime(startInput.value);
@@ -272,11 +303,7 @@ async function checkAvailability(){
       const rate=priceList[getRoomType(roomVal)]?.[consoleVal]||0;
       const totalHarga=rate*durationVal;
       finalTotal=totalHarga; appliedPromo="";
-
-      // auto promo
-      const promoCode = promoInput.value.toUpperCase().trim();
-      if(promos[promoCode]) { finalTotal=Math.round(totalHarga*(1-promos[promoCode])); appliedPromo=promoCode; }
-
+      applyDynamicPromo(); // promo otomatis
       updateWaLink();
 
       showDecisionPopup("Ruangan Tersedia 🎉","✅ Ruangan tersedia untuk dipesan.<br><br>Lanjutkan ke konfirmasi?","LANJUTKAN","BATAL",
@@ -287,30 +314,41 @@ async function checkAvailability(){
     }
   },400);
 }
+[dateInput, startInput, durationInput, roomSelect, consoleSelect, nameInput].forEach(el => {
+  el.addEventListener("input", checkAvailability);
+  el.addEventListener("change", checkAvailability);
+});
 
-// 11️⃣ KONFIRMASI / EDIT / WHATSAPP
+// 1️⃣6️⃣ KONFIRMASI / EDIT / WHATSAPP
 document.addEventListener("click",e=>{
   if(e.target.id==="editData") invoicePopup.style.display="none";
   if(e.target.id==="confirmWA"){
-    invoicePopup.style.display="none";
     const waLink=submitBtn.getAttribute("data-wa");
     if(waLink) window.open(waLink,"_blank");
+    invoicePopup.style.display="none";
     document.getElementById("bookingModal").style.display="none";
     bookingForm.reset(); statusDiv.textContent=""; document.body.style.overflow="auto";
   }
 });
 
-// 12️⃣ INIT LOAD
-(async()=>{ await loadLatestData(); console.log("🚀 Sistem booking siap & promo auto + jarak auto!"); })();
+// 1️⃣7️⃣ INIT LOAD
+(async()=>{ await loadLatestData(); console.log("🚀 Sistem booking siap & promo auto + promo dinamis + jarak auto!"); })();
 
-// 13️⃣ KOORDINAT & JARAK (watchPosition)
+// 1️⃣8️⃣ KOORDINAT & JARAK OTOMATIS
 const gamezoneLat=-0.949223; const gamezoneLng=100.354821;
+function deg2rad(deg){ return deg*(Math.PI/180); }
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2){
+  const R=6371; const dLat=deg2rad(lat2-lat1); const dLon=deg2rad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2+Math.cos(deg2rad(lat1))*Math.cos(deg2rad(lat2))*Math.sin(dLon/2)**2;
+  const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  return R*c;
+}
 const distanceEl=document.getElementById("invDistance");
 if(navigator.geolocation){
   navigator.geolocation.watchPosition(
     pos=>{
-      const km = (6371 * Math.acos(Math.cos(pos.coords.latitude*Math.PI/180) * Math.cos(gamezoneLat*Math.PI/180) * Math.cos((gamezoneLng - pos.coords.longitude)*Math.PI/180) + Math.sin(pos.coords.latitude*Math.PI/180) * Math.sin(gamezoneLat*Math.PI/180)));
-      distanceEl.textContent = km.toFixed(2)+" km";
+      const km=getDistanceFromLatLonInKm(pos.coords.latitude,pos.coords.longitude,gamezoneLat,gamezoneLng);
+      distanceEl.textContent=km.toFixed(2)+" km";
     },
     ()=>{ distanceEl.textContent="Tidak bisa mendapatkan lokasi"; },
     {enableHighAccuracy:true,maximumAge:5000,timeout:10000}
