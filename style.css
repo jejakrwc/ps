@@ -415,6 +415,32 @@ body {
   margin-top: 5px;
 }
 
+#promoCode {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ff2929;
+  width: 60%;
+  margin-right: 6px;
+  font-size: 0.9rem;
+}
+
+#applyPromo {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg,#25D366, #20ba57);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+#applyPromo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
 
 /* ===========================
    TEKS TERBILANG DI INVOICE
