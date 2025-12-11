@@ -43,4 +43,43 @@ Sistem **booking online** untuk Gamezone Padang yang mendukung pemesanan ruangan
 ---
 
 ## 🔹 Struktur Proyek
+/gamezone-booking/
+├─ index.html
+├─ style.css
+├─ script.js
+├─ data-booking.js
+├─ screenshots/
+└─ README.md
 
+
+---
+
+## 🔹 Cara Pakai
+
+1. **Clone Repository**
+
+```bash
+git clone https://github.com/username/gamezone-booking.git
+cd gamezone-booking
+
+2. Buka index.html di Browser Modern
+3. Konfigurasi Admin
+   const waNumber = "6282389224224"; // ganti nomor WA admin
+4. Update Data Booking di data-booking.js
+5. Isi Form & Submit
+   Konfirmasi dikirim via WhatsApp
+
+
+   🔹 Lisensi
+MIT License © 2025 — Free to use, modify, and distribute.
+
+🔹 Kontak
+Admin WhatsApp: WA
+Gamezone Padang
+
+
+⚡ Tips:  
+
+- **Screenshots/Animasi**: Letakkan di folder `screenshots/`.  
+- **Demo Online**: Link WA sudah otomatis mengirim pesan, bisa diganti sesuai kebutuhan.  
+- **Badge**: Bisa ditambahkan badge GitHub Actions atau versi jika proyek berkembang.  
