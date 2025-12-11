@@ -17,7 +17,7 @@ Sistem **booking online** untuk Gamezone Padang yang mendukung pemesanan ruangan
 ### 2️⃣ Popup Invoice & Promo Manual
 ![Demo Invoice GIF](screenshots/demo-invoice.gif)
 
-> 💡 Klik badge [Demo Online](https://wa.me/6282389224224?text=Halo,%20saya%20ingin%20mencoba%20booking%20Gamezone%20Padang) untuk mencoba langsung via WhatsApp.
+> 💡 Klik badge [Demo Online](https://jejakrwc.github.io/ps/)) untuk mencoba langsung via WhatsApp.
 
 ---
 
