@@ -1,8 +1,6 @@
 # 🎮 Gamezone Padang — Booking Room System
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE) 
-[![Status](https://img.shields.io/badge/Status-Production-blue.svg)] 
-[![Last Commit](https://img.shields.io/github/last-commit/username/gamezone-booking)](https://github.com/username/gamezone-booking/commits/main)
+[!DEMO]([https://img.shields.io/badge/License-MIT-green.svg](https://jejakrwc.github.io/ps/))]
 
 Sistem **booking online** untuk Gamezone Padang yang mendukung pemesanan ruangan PS4 & PS5, perhitungan harga otomatis, promo manual, dan integrasi WhatsApp untuk konfirmasi. Sistem ini juga menghitung jarak pengguna ke lokasi secara real-time.
 
@@ -11,7 +9,7 @@ Sistem **booking online** untuk Gamezone Padang yang mendukung pemesanan ruangan
 ## 🔹 Demo
 
 ### Tampilan Form Booking
-![Demo Booking Form](screenshots/demo-form.png)
+![Demo Booking Form]([https://jejakrwc.github.io/ps/))
 
 ### Invoice Interaktif & Promo Manual
 ![Demo Invoice](screenshots/demo-invoice.png)
