@@ -7,7 +7,7 @@
 
 
 // ✅ 1. NOMOR WHATSAPP ADMIN
-const waNumber = "6282389224224"; // 🟢 Ganti dengan nomor WhatsApp kamu
+const waNumber = "6285157722895"; // 🟢 Ganti dengan nomor WhatsApp kamu
 
 
 // ✅ 2. DATA PEMESANAN (dipakai oleh Website Pemesanan & Monitoring)
@@ -101,6 +101,7 @@ const roomsByConsole = {
 if (typeof window !== "undefined") {
   window.bookedData = bookedData;
 }
+
 
 
 
